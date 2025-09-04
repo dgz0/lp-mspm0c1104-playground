@@ -1,7 +1,28 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>blinky</w>
+      <w>funcs</w>
+      <w>gnuc</w>
+      <w>hysten</w>
+      <w>iidx</w>
+      <w>inena</w>
+      <w>iomux</w>
+      <w>memb</w>
+      <w>nombat</w>
+      <w>picolibc</w>
+      <w>pinc</w>
+      <w>pincm</w>
+      <w>pipd</w>
+      <w>pipu</w>
+      <w>pulldown</w>
+      <w>pwren</w>
+      <w>resetassert</w>
+      <w>rstctl</w>
       <w>spdx</w>
+      <w>wakestat</w>
+      <w>wcomp</w>
+      <w>wuen</w>
     </words>
   </dictionary>
 </component>

@@ -1,0 +1,58 @@
+{
+	"version": 3,
+
+	"cmakeMinimumRequired": {
+		"major": 3,
+		"minor": 22,
+		"patch": 1
+	},
+
+	"configurePresets": [
+	{
+		"name": "base",
+		"description": "Base configuration",
+		"hidden": true,
+		"generator": "Ninja",
+		"cacheVariables": {
+			"CMAKE_EXPORT_COMPILE_COMMANDS": {
+				"type": "BOOL",
+				"value": "ON"
+			}
+		}
+	},
+	{
+		"name": "debug-build",
+		"description": "Build in Debug mode",
+		"hidden": true,
+		"inherits": "base",
+		"cacheVariables": {
+			"CMAKE_BUILD_TYPE": {
+				"type": "STRING",
+				"value": "Debug"
+			}
+		}
+	},
+	{
+		"name": "gcc-toolchain",
+		"description": "Use the arm-none-eabi-gcc toolchain",
+		"hidden": true,
+		"toolchainFile": "${sourceDir}/cmake/arm-none-eabi-gcc.cmake"
+	},
+	{
+		"name": "example-blinky",
+		"description": "Build the blinky example",
+		"hidden": true,
+		"cacheVariables": {
+			"MSPM0C1104_BUILD_BLINKY_EXAMPLE": {
+				"type": "BOOL",
+				"value": "ON"
+			}
+		}
+	},
+	{
+		"name": "build-example-blinky-gcc",
+		"description": "Build the blinky example using the GCC toolchain",
+		"inherits": ["debug-build", "gcc-toolchain", "example-blinky"]
+	}
+	]
+}

@@ -21,9 +21,14 @@
 // SOFTWARE.
 
 #include "mspm0c1104/hal.h"
-#include "mspm0c1104/hal-gpio.h"
+#include "mspm0c1104/hal-systick.h"
 
 void hal_init(void)
 {
+#if defined(HAL_SYSTICK_ENABLE) && defined(HAL_SYSTICK_INIT_ON_START) && \
+	defined(HAL_SYSTICK_TICK_RATE_MS)
+	hal_systick_init(HAL_SYSTICK_TICK_RATE_MS);
+#endif // defined(HAL_FEATURE_SYSTICK) && defined(HAL_CFG_SYSTICK_ON_START)
+
 	hal_gpio_init();
 }

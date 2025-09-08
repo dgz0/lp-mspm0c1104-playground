@@ -50,10 +50,10 @@ static const struct pin_attrib {
 	const uint8_t io_struct;
 	const uint8_t valid_digital_funcs;
 	const bool supports_analog_funcs;
-} pin_attrib_tbl[] = {
+} pin_attribs[] = {
 	// clang-format off
 
-	[HAL_IOMUX_PIN_IDX_PA0] = {
+	[HAL_IOMUX_PINCM_PA0] = {
 		.io_struct		= IO_STRUCT_ODIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO         |
@@ -66,7 +66,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= false
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA1]	= {
+	[HAL_IOMUX_PINCM_PA1]	= {
 		.io_struct		= IO_STRUCT_ODIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO         |
@@ -77,7 +77,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= false
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA2] = {
+	[HAL_IOMUX_PINCM_PA2] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO         |
@@ -88,7 +88,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= false
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA4] = {
+	[HAL_IOMUX_PINCM_PA4] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO          |
@@ -100,7 +100,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= false
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA6] = {
+	[HAL_IOMUX_PINCM_PA6] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
@@ -113,7 +113,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= false
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA11] = {
+	[HAL_IOMUX_PINCM_PA11] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO          |
@@ -123,7 +123,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= false
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA16] = {
+	[HAL_IOMUX_PINCM_PA16] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
@@ -134,7 +134,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= true
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA17] = {
+	[HAL_IOMUX_PINCM_PA17] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
@@ -147,7 +147,7 @@ static const struct pin_attrib {
 		.supports_analog_funcs	= true
 	},
 
-	[HAL_IOMUX_PIN_IDX_PA18] = {
+	[HAL_IOMUX_PINCM_PA18] = {
 		.io_struct		= IO_STRUCT_SDIO,
 		.valid_digital_funcs	=
 			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
@@ -158,53 +158,176 @@ static const struct pin_attrib {
 			HAL_IOMUX_PIN_PA18_DIGITAL_FUNC_TIMA0_C3  |
 			HAL_IOMUX_PIN_PA18_DIGITAL_FUNC_TIMA0_C3N,
 		.supports_analog_funcs = true
-	};
+	},
+
+	[HAL_IOMUX_PINCM_PA19] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO		  |
+			HAL_IOMUX_PIN_PA19_DIGITAL_FUNC_SWDIO	  |
+			HAL_IOMUX_PIN_PA19_DIGITAL_FUNC_SPI0_SCK  |
+			HAL_IOMUX_PIN_PA19_DIGITAL_FUNC_SPI0_POCI |
+			HAL_IOMUX_PIN_PA19_DIGITAL_FUNC_TIMA0_C2  |
+			HAL_IOMUX_PIN_PA19_DIGITAL_FUNC_TIMG14_C0 |
+			HAL_IOMUX_PIN_PA19_DIGITAL_FUNC_UART0_CTS,
+		.supports_analog_funcs = false
+	},
+
+	[HAL_IOMUX_PINCM_PA20] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA20_DIGITAL_FUNC_SWCLK     |
+			HAL_IOMUX_PIN_PA20_DIGITAL_FUNC_TIMA_FAL1 |
+			HAL_IOMUX_PIN_PA20_DIGITAL_FUNC_SPI0_PICO |
+			HAL_IOMUX_PIN_PA20_DIGITAL_FUNC_TIMA0_C2N |
+			HAL_IOMUX_PIN_PA20_DIGITAL_FUNC_TIMA0_C0  |
+			HAL_IOMUX_PIN_PA20_DIGITAL_FUNC_UART0_RTS,
+		.supports_analog_funcs = true
+	},
+
+	[HAL_IOMUX_PINCM_PA22] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA22_DIGITAL_FUNC_UART0_RX  |
+			HAL_IOMUX_PIN_PA22_DIGITAL_FUNC_SPI0_POCI |
+			HAL_IOMUX_PIN_PA22_DIGITAL_FUNC_UART0_RTS |
+			HAL_IOMUX_PIN_PA22_DIGITAL_FUNC_CLK_OUT   |
+			HAL_IOMUX_PIN_PA22_DIGITAL_FUNC_TIMA0_C1,
+		.supports_analog_funcs = true
+	},
+
+	[HAL_IOMUX_PINCM_PA23] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA23_DIGITAL_FUNC_UART0_TX  |
+			HAL_IOMUX_PIN_PA23_DIGITAL_FUNC_SPI0_CS3  |
+			HAL_IOMUX_PIN_PA23_DIGITAL_FUNC_TIMG14_C0 |
+			HAL_IOMUX_PIN_PA23_DIGITAL_FUNC_UART0_CTS |
+			HAL_IOMUX_PIN_PA23_DIGITAL_FUNC_TIMA0_C3  |
+			HAL_IOMUX_PIN_PA23_DIGITAL_FUNC_TIMG14_C1,
+		.supports_analog_funcs = false
+	},
+
+	[HAL_IOMUX_PINCM_PA24] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA24_DIGITAL_FUNC_SPI0_CS2  |
+			HAL_IOMUX_PIN_PA24_DIGITAL_FUNC_TIMG14_C1 |
+			HAL_IOMUX_PIN_PA24_DIGITAL_FUNC_UART0_RTS |
+			HAL_IOMUX_PIN_PA24_DIGITAL_FUNC_TIMG14_C2 |
+			HAL_IOMUX_PIN_PA24_DIGITAL_FUNC_TIMA0_C3N |
+			HAL_IOMUX_PIN_PA24_DIGITAL_FUNC_UART0_RX,
+		.supports_analog_funcs = true
+	},
+
+	[HAL_IOMUX_PINCM_PA25] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA25_DIGITAL_FUNC_TIMG14_C3 |
+			HAL_IOMUX_PIN_PA25_DIGITAL_FUNC_UART0_TX  |
+			HAL_IOMUX_PIN_PA25_DIGITAL_FUNC_SPI0_PICO |
+			HAL_IOMUX_PIN_PA25_DIGITAL_FUNC_TIMG14_C1 |
+			HAL_IOMUX_PIN_PA25_DIGITAL_FUNC_TIMA_FAL2,
+		.supports_analog_funcs = true
+	},
+
+	[HAL_IOMUX_PINCM_PA26] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA26_DIGITAL_FUNC_TIMG8_C0  |
+			HAL_IOMUX_PIN_PA26_DIGITAL_FUNC_SPI0_POCI |
+			HAL_IOMUX_PIN_PA26_DIGITAL_FUNC_BEEP      |
+			HAL_IOMUX_PIN_PA26_DIGITAL_FUNC_TIMG14_C0 |
+			HAL_IOMUX_PIN_PA26_DIGITAL_FUNC_TIMA_FAL0,
+		.supports_analog_funcs = true
+	},
+
+	[HAL_IOMUX_PINCM_PA27] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO           |
+			HAL_IOMUX_PIN_PA27_DIGITAL_FUNC_TIMG8_C1  |
+			HAL_IOMUX_PIN_PA27_DIGITAL_FUNC_SPI0_CS3  |
+			HAL_IOMUX_PIN_PA27_DIGITAL_FUNC_TIMA0_C0N |
+			HAL_IOMUX_PIN_PA27_DIGITAL_FUNC_UART0_TX  |
+			HAL_IOMUX_PIN_PA27_DIGITAL_FUNC_SPI0_POCI |
+			HAL_IOMUX_PIN_PA27_DIGITAL_FUNC_TIMA_FAL2,
+		.supports_analog_funcs = true
+	},
+
+	[HAL_IOMUX_PINCM_PA28] = {
+		.io_struct		= IO_STRUCT_SDIO,
+		.valid_digital_funcs	=
+			HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO          |
+			HAL_IOMUX_PIN_PA28_DIGITAL_FUNC_TIMA0_C0 |
+			HAL_IOMUX_PIN_PA28_DIGITAL_FUNC_UART0_RX |
+			HAL_IOMUX_PIN_PA28_DIGITAL_FUNC_TIMG8_IDX,
+		.supports_analog_funcs = true
+	}
 
 	// clang-format on
 };
 
-void hal_iomux_set_pin_inv(const enum hal_iomux_pin_idx pin_idx, const bool inv)
+const uint32_t hal_iomux_valid_pincm_mask =
+	(1 << HAL_IOMUX_PINCM_PA0) | (1 << HAL_IOMUX_PINCM_PA1) |
+	(1 << HAL_IOMUX_PINCM_PA2) | (1 << HAL_IOMUX_PINCM_PA4) |
+	(1 << HAL_IOMUX_PINCM_PA6) | (1 << HAL_IOMUX_PINCM_PA11) |
+	(1 << HAL_IOMUX_PINCM_PA16) | (1 << HAL_IOMUX_PINCM_PA17) |
+	(1 << HAL_IOMUX_PINCM_PA18) | (1 << HAL_IOMUX_PINCM_PA19) |
+	(1 << HAL_IOMUX_PINCM_PA20) | (1 << HAL_IOMUX_PINCM_PA22) |
+	(1 << HAL_IOMUX_PINCM_PA23) | (1 << HAL_IOMUX_PINCM_PA24) |
+	(1 << HAL_IOMUX_PINCM_PA25) | (1 << HAL_IOMUX_PINCM_PA26) |
+	(1 << HAL_IOMUX_PINCM_PA27) | (1 << HAL_IOMUX_PINCM_PA28);
+
+void hal_iomux_set_pin_inv(const enum hal_iomux_pincm idx, const bool inv)
 {
 	if (inv) {
-		HAL_IOMUX->PINCM[pin_idx] |= PINCM_BIT_INV;
+		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_INV;
 	} else {
-		HAL_IOMUX->PINCM[pin_idx] &= ~PINCM_BIT_INV;
+		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_INV;
 	}
 }
 
-void hal_iomux_set_pin_hysteresis(const enum hal_iomux_pin_idx pin_idx,
+void hal_iomux_set_pin_hysteresis(const enum hal_iomux_pincm idx,
 				  const bool hysteresis)
 {
 	if (hysteresis) {
-		if (!(pin_attrib_tbl[pin_idx].io_struct &
-		      IO_FEAT_HYSTERESIS_CTRL)) {
+		if (!(pin_attribs[idx].io_struct & IO_FEAT_HYSTERESIS_CTRL)) {
 			return;
 		}
-
-		HAL_IOMUX->PINCM[pin_idx] |= PINCM_BIT_HYSTEN;
+		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_HYSTEN;
 	} else {
-		HAL_IOMUX->PINCM[pin_idx] &= ~PINCM_BIT_HYSTEN;
+		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_HYSTEN;
 	}
 }
 
-void hal_iomux_set_pin_resistor(const enum hal_iomux_pin_idx pin_idx,
+void hal_iomux_set_pin_resistor(const enum hal_iomux_pincm idx,
 				const enum hal_iomux_resistor_type resistor_type)
 {
 	switch (resistor_type) {
 	case HAL_IOMUX_RESISTOR_TYPE_NONE:
-		HAL_IOMUX->PINCM[pin_idx] &= ~(PINCM_BIT_PIPU | PINCM_BIT_PIPD);
+		HAL_IOMUX->PINCM[idx] &= ~(PINCM_BIT_PIPU | PINCM_BIT_PIPD);
 		return;
 
 	case HAL_IOMUX_RESISTOR_TYPE_PULL_UP:
-		// check if pin supports pullup resistors
-		HAL_IOMUX->PINCM[pin_idx] &= ~PINCM_BIT_PIPD;
-		HAL_IOMUX->PINCM[pin_idx] |= PINCM_BIT_PIPU;
+		// This pin does not support a programmable pull-up resistor.
+		HAL_ASSERT((pin_attribs[idx].io_struct &
+			    IO_FEAT_PULLUP_RESISTOR) != 0);
+
+		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_PIPD;
+		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_PIPU;
 
 		return;
 
 	case HAL_IOMUX_RESISTOR_TYPE_PULL_DOWN:
-		HAL_IOMUX->PINCM[pin_idx] |= PINCM_BIT_PIPD;
-		HAL_IOMUX->PINCM[pin_idx] &= ~PINCM_BIT_PIPU;
+		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_PIPD;
+		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_PIPU;
 
 		return;
 
@@ -213,31 +336,35 @@ void hal_iomux_set_pin_resistor(const enum hal_iomux_pin_idx pin_idx,
 	}
 }
 
-void hal_iomux_set_pin_func(const enum hal_iomux_pin_idx pin_idx, uint8_t func,
+void hal_iomux_set_pin_func(const enum hal_iomux_pincm idx, uint8_t func,
 			    const bool input_enabled)
 {
-	// This pin does not support the digital I/O function requested.
-	HAL_ASSERT((pin_attrib_tbl[pin_idx].valid_digital_funcs & func) != 0);
-
 	// Clear the PC bit (input/output connect bit) and INENA (input connect
 	// bit) in the corresponding PINCMx register
-	HAL_IOMUX->PINCM[pin_idx] &= ~(PINCM_BIT_PC | PINCM_BIT_INENA);
+	HAL_IOMUX->PINCM[idx] &= ~(PINCM_BIT_PC | PINCM_BIT_INENA);
 
 	// Write 0x0 to the PF field in the PINCMx to clear the logic in the
 	// data path
-	set_val_by_mask(HAL_IOMUX->PINCM[pin_idx], PINCM_MASK_PF, 0x0);
+	set_val_by_mask(HAL_IOMUX->PINCM[idx], PINCM_MASK_PF, 0x0);
+
+	if (func == 0) {
+		return;
+	}
+
+	// This pin does not support the digital I/O function requested.
+	HAL_ASSERT((pin_attribs[idx].valid_digital_funcs & func) != 0);
 
 	func = clz_u32(func);
 
 	// Select the new peripheral function by writing the peripheral function
 	// ID to the PF register
-	set_val_by_mask(HAL_IOMUX->PINCM[pin_idx], PINCM_MASK_PF, func);
+	set_val_by_mask(HAL_IOMUX->PINCM[idx], PINCM_MASK_PF, func);
 
 	// Set the PC and INENA bits in the PINCMx register to connect the newly
 	// selected peripheral
 	if (input_enabled) {
-		HAL_IOMUX->PINCM[pin_idx] |= (PINCM_BIT_PC | PINCM_BIT_INENA);
+		HAL_IOMUX->PINCM[idx] |= (PINCM_BIT_PC | PINCM_BIT_INENA);
 	} else {
-		HAL_IOMUX->PINCM[pin_idx] |= PINCM_BIT_PC;
+		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_PC;
 	}
 }

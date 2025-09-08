@@ -24,20 +24,42 @@
 
 #include <stdint.h>
 
-#ifdef __GNUC__
+/**
+ * @brief Place code into a particular section.
+ *
+ * @param x The section to place the code into. This must be defined in the
+ * linker script.
+ */
 #define PLACE_IN_SECTION(x) __attribute__((section((x))))
+
+/** This function's return value must not be discarded. */
 #define NODISCARD __attribute__((warn_unused_result))
+
+/** This function will not return. */
 #define NORETURN __attribute__((noreturn))
+
+/** This control path is unreachable. */
 #define UNREACHABLE __builtin_unreachable()
+
+/** This function is aliased to another. */
 #define ALIAS(x) __attribute__((alias((x))))
+
+/**
+ * This function is a weak symbol, i.e., it can be overridden by providing a
+ * definition in another translation unit.
+ */
 #define WEAK_SYMBOL __attribute__((weak))
+
+/** This function will always be inlined regardless of compiler heuristics. */
 #define ALWAYS_INLINE static inline __attribute__((always_inline))
 
+/**
+ * Perform a count leading zeroes operation.
+ *
+ * @param x The parameter to count the number of leading zeroes on.
+ * @return The number of leading zeroes.
+ */
 ALWAYS_INLINE NODISCARD uint32_t clz_u32(const uint32_t x)
 {
 	return 31 - __builtin_clz(x);
 }
-
-#else
-#error "Unknown compiler!"
-#endif // __GNUC__

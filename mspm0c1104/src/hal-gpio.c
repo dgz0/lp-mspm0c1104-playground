@@ -30,36 +30,20 @@
 #define RSTCTL_MASK_KEY		(0xB1 << 24)
 #define RSTCTL_BIT_RESETASSERT	(BIT_0)
 
-#define GPIO_PIN(num)						\
-	const struct hal_gpio_pin HAL_GPIO_PIN_PA## num = {	\
-		.pin_idx	= BIT_## num,			\
-		.iomux_idx	= HAL_IOMUX_PIN_IDX_PA## num	\
-	}							\
-
-GPIO_PIN(0);
-GPIO_PIN(1);
-GPIO_PIN(2);
-GPIO_PIN(4);
-GPIO_PIN(6);
-GPIO_PIN(11);
-GPIO_PIN(16);
-GPIO_PIN(17);
-GPIO_PIN(18);
-GPIO_PIN(19);
-GPIO_PIN(20);
-GPIO_PIN(22);
-GPIO_PIN(23);
-GPIO_PIN(24);
-GPIO_PIN(25);
-GPIO_PIN(26);
-GPIO_PIN(27);
-GPIO_PIN(28);
-
-#undef GPIO_PIN
-
 // clang-format on
 
 static uint32_t configured_pins;
+
+static void enable_pin_output(const enum hal_gpio_pin pins)
+{
+	HAL_GPIO0->DOESET31_0 |= pins;
+}
+
+NODISCARD static enum hal_iomux_pincm
+gpio_pin_to_iomux_pincm(const enum hal_gpio_pin pin)
+{
+	return clz_u32(pin);
+}
 
 void hal_gpio_pwr_enable(void)
 {
@@ -71,38 +55,38 @@ void hal_gpio_rst(void)
 	HAL_GPIO0->RSTCTL = RSTCTL_MASK_KEY | RSTCTL_BIT_RESETASSERT;
 }
 
-void hal_gpio_enable_pin_output(const struct hal_gpio_pin *const pin)
-{
-	HAL_GPIO0->DOE31_0 |= pin->pin_idx;
-}
-
-void hal_gpio_cfg_pin(const struct hal_gpio_pin_cfg *const cfg)
-{
-	hal_iomux_set_pin_hysteresis(cfg->pin->iomux_idx,
-				     cfg->digital_attrib.hysteresis);
-
-	hal_iomux_set_pin_resistor(cfg->pin->iomux_idx,
-				   cfg->digital_attrib.resistor);
-
-	hal_iomux_set_pin_func(cfg->pin->iomux_idx, cfg->digital_attrib.func,
-			       cfg->input_enabled);
-
-	configured_pins |= cfg->pin->pin_idx;
-}
-
 void hal_gpio_init(void)
 {
 	hal_gpio_rst();
 	hal_gpio_pwr_enable();
 
-	for (uint32_t i = 0; i < hal_gpio_cfg_initial_num_entries; ++i) {
+	for (uint32_t i = 0; i < hal_gpio_cfg_initial_num_entries; ++i)
 		hal_gpio_cfg_pin(&hal_gpio_cfg_initial[i]);
-	}
 }
 
-void hal_gpio_cfg_unused_pins(
-	enum hal_gpio_unused_pin_cfg_strategy unused_pin_cfg_strategy)
+void hal_gpio_cfg_pin(const struct hal_gpio_pin_cfg *const cfg)
 {
-	for (uint32_t i = 0; i < HAL_IOMUX_NUM_PINS; ++i) {
+	if (!cfg->input_enabled)
+		enable_pin_output(cfg->pin);
+
+	if (cfg->initial_state == HAL_GPIO_PIN_INITIAL_STATE_LOW) {
+		hal_gpio_pin_set_low(cfg->pin);
+	} else {
+		hal_gpio_pin_set_high(cfg->pin);
 	}
+
+	const enum hal_iomux_pincm pincm = gpio_pin_to_iomux_pincm(cfg->pin);
+
+	if (cfg->analog) {
+		hal_iomux_set_pin_func(pincm, 0, cfg->input_enabled);
+		configured_pins |= cfg->pin;
+
+		return;
+	}
+
+	hal_iomux_set_pin_hysteresis(pincm, cfg->digital.hysteresis);
+	hal_iomux_set_pin_resistor(pincm, cfg->digital.resistor);
+	hal_iomux_set_pin_func(pincm, cfg->digital.func, cfg->input_enabled);
+
+	configured_pins |= cfg->pin;
 }

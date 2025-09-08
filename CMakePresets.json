@@ -33,6 +33,18 @@
 		}
 	},
 	{
+		"name": "rel-build",
+		"description": "Build in Release mode",
+		"hidden": true,
+		"inherits": "base",
+		"cacheVariables": {
+			"CMAKE_BUILD_TYPE": {
+				"type": "STRING",
+				"value": "Release"
+			}
+		}
+	},
+	{
 		"name": "gcc-toolchain",
 		"description": "Use the arm-none-eabi-gcc toolchain",
 		"hidden": true,
@@ -50,9 +62,16 @@
 		}
 	},
 	{
-		"name": "build-example-blinky-gcc",
-		"description": "Build the blinky example using the GCC toolchain",
+		"name": "build-example-dbg-blinky-gcc",
+		"description": "Build the blinky example in Debug mode using the GCC toolchain",
+		"binaryDir": "${sourceDir}/cmake-build-example-dbg-blinky-gcc",
 		"inherits": ["debug-build", "gcc-toolchain", "example-blinky"]
+	},
+	{
+		"name": "build-example-rel-blinky-gcc",
+		"description": "Build the blinky example in Release mode using the GCC toolchain",
+		"binaryDir": "${sourceDir}/cmake-build-example-rel-blinky-gcc",
+		"inherits": ["rel-build", "gcc-toolchain", "example-blinky"]
 	}
 	]
 }

@@ -20,9 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#include "cfg.h"
 
-#include <mspm0c1104/hal-gpio.h>
-#include <mspm0c1104/hal-soft-tmr.h>
+const struct hal_gpio_pin_cfg hal_gpio_cfg_initial[] = {
+	// clang-format off
 
-void hal_init(void);
+	[0] = {
+		.pin		= APP_GPIO_PIN_RED_LED,
+		.initial_state	= HAL_GPIO_PIN_INITIAL_STATE_LOW,
+		.input_enabled	= false,
+		.analog		= false,
+		.digital	= {
+			.func		= HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO,
+			.resistor	= HAL_IOMUX_RESISTOR_TYPE_NONE,
+			.data_inversion	= false,
+			.hysteresis	= false
+		}
+	}
+
+	// clang-format on
+};
+
+const uint32_t hal_gpio_cfg_initial_num_entries =
+	ARRAY_SIZE(hal_gpio_cfg_initial);

@@ -21,3 +21,40 @@
 // SOFTWARE.
 
 #pragma once
+
+#include "compiler.h"
+#include "util.h"
+
+enum hal_nvic_irq {
+	// clang-format off
+
+	HAL_NVIC_IRQ_INT_GROUP0	= 0,
+	HAL_NVIC_IRQ_GPIO0	= 1,
+	HAL_NVIC_IRQ_TIMG8	= 2,
+	HAL_NVIC_IRQ_ADC	= 4,
+	HAL_NVIC_IRQ_SPI0	= 9,
+	HAL_NVIC_IRQ_UART0	= 15,
+	HAL_NVIC_IRQ_TIMG14	= 16,
+	HAL_NVIC_IRQ_TIMA0	= 18,
+	HAL_NVIC_IRQ_I2C0	= 24,
+	HAL_NVIC_IRQ_DMA	= 31
+
+	// clang-format on
+};
+
+#define HAL_NVIC_ISER (*(volatile uint32_t *const)(0xE000E100))
+#define HAL_NVIC_ICER (*(volatile uint32_t *const)(0xE000E180))
+
+ALWAYS_INLINE void hal_nvic_irq_en(const enum hal_nvic_irq irq)
+{
+	HAL_NVIC_ISER |= (1 << irq);
+	hal_dsb();
+	hal_isb();
+}
+
+ALWAYS_INLINE void hal_nvic_irq_disable(const enum hal_nvic_irq irq)
+{
+	HAL_NVIC_ICER |= (1 << irq);
+	hal_dsb();
+	hal_isb();
+}

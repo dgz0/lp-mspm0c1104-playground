@@ -23,7 +23,7 @@
 /** @file hal-startup.c Provides startup code for the TI MSPM0C1104. */
 
 #include <stdint.h>
-#include "../include/mspm0c1104/compiler.h"
+#include "mspm0c1104/compiler.h"
 
 /**
  * @defgroup mspm0c1104_vec_tbl_offsets TI MSPM0C1104 vector table offsets

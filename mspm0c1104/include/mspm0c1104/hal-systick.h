@@ -20,23 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#pragma once
+
+#include <stdint.h>
 #include "hal-cfg.h"
 
-const struct hal_gpio_pin_cfg hal_gpio_cfg_initial[] = {
-	// clang-format off
+void hal_systick_init(uint32_t tick_rate);
 
-	[0] = {
-		.pin		= HAL_GPIO_PIN_TEST_PIN,
-		.input_enabled	= false,
-		.digital_attrib	= {
-			.func		= HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO,
-			.resistor	= HAL_IOMUX_RESISTOR_TYPE_NONE,
-			.data_inversion	= false,
-			.hysteresis	= false
-		}
-	}
-
-	// clang-format on
-};
-
-const uint32_t hal_gpio_cfg_initial_num_entries = ARRAY_SIZE(hal_gpio_cfg_initial);
+HAL_SYSTICK_TICK_TYPE hal_ticks_get(void);

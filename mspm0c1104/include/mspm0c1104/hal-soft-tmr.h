@@ -22,6 +22,29 @@
 
 #pragma once
 
-#include <mspm0c1104/hal.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include "hal-cfg.h"
 
-#define HAL_GPIO_PIN_TEST_PIN (&HAL_GPIO_PIN_PA6)
+#ifdef HAL_SOFT_TMR_ENABLE
+
+enum hal_soft_tmr_state {
+	HAL_SOFT_TMR_STATE_DISABLED = 0,
+	HAL_SOFT_TMR_STATE_RUNNING = 1,
+	HAL_SOFT_TMR_STATE_EXPIRED = 2
+};
+
+struct hal_soft_tmr {
+	enum hal_soft_tmr_state state;
+	HAL_SYSTICK_TICK_TYPE start_ts;
+	HAL_SYSTICK_TICK_TYPE expire_ts;
+};
+
+void hal_soft_tmr_start(struct hal_soft_tmr *tmr,
+			HAL_SYSTICK_TICK_TYPE start_ts);
+
+void hal_soft_tmr_extend(struct hal_soft_tmr *tmr, HAL_SYSTICK_TICK_TYPE delay);
+
+bool hal_soft_tmr_expired(struct hal_soft_tmr *tmr);
+
+#endif // HAL_SOFT_TMR_ENABLE

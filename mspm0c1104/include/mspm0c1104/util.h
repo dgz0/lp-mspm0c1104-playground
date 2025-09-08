@@ -24,6 +24,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include "compiler.h"
 
 // clang-format off
 
@@ -62,18 +63,34 @@
 
 // clang-format on
 
+ALWAYS_INLINE void hal_no_op(void)
+{
+	asm volatile("NOP" ::: "memory");
+}
+
+ALWAYS_INLINE void hal_isb(void)
+{
+	asm volatile("ISB" ::: "memory");
+}
+
+ALWAYS_INLINE void hal_dsb(void)
+{
+	asm volatile("DSB" ::: "memory");
+}
+
 ALWAYS_INLINE void hal_halt_processor(void)
 {
+	// check if a watchdog is running, let it fire if so
 	asm("BKPT");
 }
 
 #ifndef NDEBUG
-#define HAL_ASSERT(expr)			\
-	({					\
-		if (!(expr)) {			\
-			hal_halt_processor();	\
-			UNREACHABLE;		\
-		}				\
+#define HAL_ASSERT(expr)                      \
+	({                                    \
+		if (!(expr)) {                \
+			hal_halt_processor(); \
+			UNREACHABLE;          \
+		}                             \
 	})
 
 #define HAL_ASSERT_OR_UNREACHABLE(expr) HAL_ASSERT(false)
@@ -98,3 +115,8 @@ ALWAYS_INLINE void hal_halt_processor(void)
 		const int shift = __builtin_ffs((mask)) - 1; \
 		((src) & (mask)) >> shift;                   \
 	})
+
+#define MHZ_TO_HZ(mhz) ((mhz) * (1000000))
+#define SEC_TO_MS(sec) ((sec) * (1000))
+
+#define IS_UNSIGNED_TYPE(type) ((type)0 < (type)-1)

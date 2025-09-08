@@ -20,9 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
-
-#include <mspm0c1104/hal-gpio.h>
 #include <mspm0c1104/hal-soft-tmr.h>
+#include <mspm0c1104/hal-systick.h>
 
-void hal_init(void);
+void hal_soft_tmr_start(struct hal_soft_tmr *const tmr,
+			const HAL_SYSTICK_TICK_TYPE start_ts)
+{
+	tmr->state = HAL_SOFT_TMR_STATE_RUNNING;
+	tmr->expire_ts = hal_ticks_get() + start_ts;
+}
+
+void hal_soft_tmr_extend(struct hal_soft_tmr *const tmr,
+			 const HAL_SYSTICK_TICK_TYPE delay)
+{
+	tmr->expire_ts += delay;
+}
+
+bool hal_soft_tmr_expired(struct hal_soft_tmr *const tmr)
+{
+	if ((hal_ticks_get() - tmr->start_ts) >= tmr->expire_ts) {
+		tmr->state = HAL_SOFT_TMR_STATE_EXPIRED;
+		return true;
+	}
+	return false;
+}

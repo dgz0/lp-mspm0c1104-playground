@@ -20,20 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set(SRCS hal.c hal-gpio.c hal-iomux.c hal-startup.c)
+set(SRCS
+	hal.c
+	hal-gpio.c
+	hal-iomux.c
+	hal-soft-tmr.c
+	hal-startup.c
+	hal-systick.c
+)
 
 set(HDRS
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/compiler.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-gpio.h
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-iomux.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-nvic.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-soft-tmr.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-systick.h
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/util.h
 )
 
-add_library(mspm0c1104 STATIC ${SRCS} ${HDRS})
+add_library(mspm0c1104 OBJECT ${SRCS} ${HDRS})
 
 target_include_directories(
 	mspm0c1104
 	PUBLIC
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include
 )
-
-toolchain_print_target_size(mspm0c1104)

@@ -30,8 +30,6 @@
 
 #define HAL_IOMUX ((struct hal_iomux_regs *const)(0x40428000))
 
-#define HAL_IOMUX_NUM_PINS (29)
-
 // clang-format off
 
 #define HAL_IOMUX_PIN_DIGITAL_FUNC_GPIO	(BIT_1)
@@ -149,31 +147,36 @@
 
 // clang-format on
 
+enum hal_iomux_pincm {
+	// clang-format off
+
+	HAL_IOMUX_PINCM_PA0	= 0,
+	HAL_IOMUX_PINCM_PA1	= 1,
+	HAL_IOMUX_PINCM_PA2	= 2,
+	HAL_IOMUX_PINCM_PA4	= 4,
+	HAL_IOMUX_PINCM_PA6	= 6,
+	HAL_IOMUX_PINCM_PA11	= 11,
+	HAL_IOMUX_PINCM_PA16	= 16,
+	HAL_IOMUX_PINCM_PA17	= 17,
+	HAL_IOMUX_PINCM_PA18	= 18,
+	HAL_IOMUX_PINCM_PA19	= 19,
+	HAL_IOMUX_PINCM_PA20	= 20,
+	HAL_IOMUX_PINCM_PA22	= 22,
+	HAL_IOMUX_PINCM_PA23	= 23,
+	HAL_IOMUX_PINCM_PA24	= 24,
+	HAL_IOMUX_PINCM_PA25	= 25,
+	HAL_IOMUX_PINCM_PA26	= 26,
+	HAL_IOMUX_PINCM_PA27	= 27,
+	HAL_IOMUX_PINCM_PA28	= 28,
+	HAL_IOMUX_PINCM_NUM_MAX
+
+	// clang-format on
+};
+
 struct hal_iomux_regs {
 	const uint32_t pad;
 
-	volatile uint32_t PINCM[HAL_IOMUX_NUM_PINS];
-};
-
-enum hal_iomux_pin_idx {
-	HAL_IOMUX_PIN_IDX_PA0 = 0,
-	HAL_IOMUX_PIN_IDX_PA1 = 1,
-	HAL_IOMUX_PIN_IDX_PA2 = 2,
-	HAL_IOMUX_PIN_IDX_PA4 = 4,
-	HAL_IOMUX_PIN_IDX_PA6 = 6,
-	HAL_IOMUX_PIN_IDX_PA11 = 11,
-	HAL_IOMUX_PIN_IDX_PA16 = 16,
-	HAL_IOMUX_PIN_IDX_PA17 = 17,
-	HAL_IOMUX_PIN_IDX_PA18 = 18,
-	HAL_IOMUX_PIN_IDX_PA19 = 19,
-	HAL_IOMUX_PIN_IDX_PA20 = 20,
-	HAL_IOMUX_PIN_IDX_PA22 = 22,
-	HAL_IOMUX_PIN_IDX_PA23 = 23,
-	HAL_IOMUX_PIN_IDX_PA24 = 24,
-	HAL_IOMUX_PIN_IDX_PA25 = 25,
-	HAL_IOMUX_PIN_IDX_PA26 = 26,
-	HAL_IOMUX_PIN_IDX_PA27 = 27,
-	HAL_IOMUX_PIN_IDX_PA28 = 28
+	volatile uint32_t PINCM[HAL_IOMUX_PINCM_NUM_MAX];
 };
 
 enum hal_iomux_resistor_type {
@@ -189,13 +192,14 @@ enum hal_iomux_resistor_type {
 
 STATIC_ASSERT_OFFSET(struct hal_iomux_regs, PINCM, 0x4);
 
-void hal_iomux_set_pin_inv(enum hal_iomux_pin_idx pin_idx, bool inv);
+void hal_iomux_set_pin_inv(enum hal_iomux_pincm pincm, bool inv);
 
-void hal_iomux_set_pin_hysteresis(enum hal_iomux_pin_idx pin_idx,
-				  bool hysteresis);
+void hal_iomux_set_pin_hysteresis(enum hal_iomux_pincm pincm, bool hysteresis);
 
-void hal_iomux_set_pin_resistor(enum hal_iomux_pin_idx pin_idx,
+void hal_iomux_set_pin_resistor(enum hal_iomux_pincm pincm,
 				enum hal_iomux_resistor_type resistor_type);
 
-void hal_iomux_set_pin_func(enum hal_iomux_pin_idx pin_idx, uint8_t func,
+void hal_iomux_set_pin_func(enum hal_iomux_pincm pincm, uint8_t func,
 			    bool input_enabled);
+
+extern const uint32_t hal_iomux_valid_pincm_mask;

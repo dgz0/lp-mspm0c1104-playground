@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include <mspm0c1104/hal-gpio.h>
-#include <mspm0c1104/hal-soft-tmr.h>
+#include <mspm0c1104/hal.h>
 
-void hal_init(void);
+#define APP_GPIO_PIN_RED_LED	(HAL_GPIO_PIN_PA22)

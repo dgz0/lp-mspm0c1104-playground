@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set(SRCS hal-cfg.c main.c)
+set(SRCS cfg.c main.c)
 
 add_executable(lp-mspm0c1104-example-blinky ${SRCS})
 target_link_libraries(lp-mspm0c1104-example-blinky mspm0c1104)

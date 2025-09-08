@@ -21,16 +21,22 @@
 // SOFTWARE.
 
 #include <stdlib.h>
-#include "hal-cfg.h"
+#include "cfg.h"
 
 int main(void)
 {
 	hal_init();
-	hal_gpio_cfg_unused_pins(HAL_GPIO_UNUSED_PIN_CFG_STRATEGY_OUTPUT_LOW);
+
+	struct hal_soft_tmr tmr;
+	hal_soft_tmr_start(&tmr, SEC_TO_MS(1));
 
 	for (;;) {
-		hal_gpio_pin_toggle(HAL_GPIO_PIN_TEST_PIN);
-		asm("nop");
+		if (hal_soft_tmr_expired(&tmr)) {
+			hal_gpio_pin_toggle(APP_GPIO_PIN_RED_LED);
+			hal_soft_tmr_start(&tmr, SEC_TO_MS(1));
+		} else {
+			hal_no_op();
+		}
 	}
 	return EXIT_FAILURE;
 }

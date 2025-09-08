@@ -23,10 +23,35 @@
 #pragma once
 
 #include "compiler.h"
-#include "util.h"
 #include "hal-iomux.h"
+#include "util.h"
 
 #define HAL_GPIO0 ((struct hal_gpio_regs *const)(0x400A0000))
+
+enum hal_gpio_pin {
+	// clang-format off
+
+	HAL_GPIO_PIN_PA0	= BIT_0,
+	HAL_GPIO_PIN_PA1	= BIT_1,
+	HAL_GPIO_PIN_PA2	= BIT_2,
+	HAL_GPIO_PIN_PA4	= BIT_4,
+	HAL_GPIO_PIN_PA6	= BIT_6,
+	HAL_GPIO_PIN_PA11	= BIT_11,
+	HAL_GPIO_PIN_PA16	= BIT_16,
+	HAL_GPIO_PIN_PA17	= BIT_17,
+	HAL_GPIO_PIN_PA18	= BIT_18,
+	HAL_GPIO_PIN_PA19	= BIT_19,
+	HAL_GPIO_PIN_PA20	= BIT_20,
+	HAL_GPIO_PIN_PA22	= BIT_22,
+	HAL_GPIO_PIN_PA23	= BIT_23,
+	HAL_GPIO_PIN_PA24	= BIT_24,
+	HAL_GPIO_PIN_PA25	= BIT_25,
+	HAL_GPIO_PIN_PA26	= BIT_26,
+	HAL_GPIO_PIN_PA27	= BIT_27,
+	HAL_GPIO_PIN_PA28	= BIT_28
+
+	// clang-format on
+};
 
 enum hal_gpio_unused_pin_cfg_strategy {
 	/** All unused pins are configured to output low. */
@@ -47,6 +72,16 @@ enum hal_gpio_unused_pin_cfg_strategy {
 	HAL_GPIO_UNUSED_PIN_CFG_STRATEGY_INPUT_PULLDOWN = 2
 };
 
+enum hal_gpio_unused_pin_cfg_debug_pins {
+	HAL_GPIO_UNUSED_PIN_CFG_EXCLUDE_DEBUG_PINS = 0,
+	HAL_GPIO_UNUSED_PIN_CFG_INCLUDE_DEBUG_PINS = 1
+};
+
+enum hal_gpio_pin_initial_state {
+	HAL_GPIO_PIN_INITIAL_STATE_LOW = 0,
+	HAL_GPIO_PIN_INITIAL_STATE_HIGH = 1
+};
+
 struct hal_gpio_pin_digital_attrib {
 	uint32_t func;
 	bool data_inversion;
@@ -54,15 +89,12 @@ struct hal_gpio_pin_digital_attrib {
 	enum hal_iomux_resistor_type resistor;
 };
 
-struct hal_gpio_pin {
-	const uint32_t pin_idx;
-	const enum hal_iomux_pin_idx iomux_idx;
-};
-
 struct hal_gpio_pin_cfg {
-	const struct hal_gpio_pin *pin;
+	enum hal_gpio_pin pin;
+	enum hal_gpio_pin_initial_state initial_state;
 	bool input_enabled;
-	const struct hal_gpio_pin_digital_attrib digital_attrib;
+	bool analog;
+	struct hal_gpio_pin_digital_attrib digital;
 };
 
 struct hal_gpio_regs_intr_grp {
@@ -351,44 +383,48 @@ STATIC_ASSERT_OFFSET(struct hal_gpio_regs, FILTEREN31_16, 0x150C);
 STATIC_ASSERT_OFFSET(struct hal_gpio_regs, DMAMASK, 0x1510);
 STATIC_ASSERT_OFFSET(struct hal_gpio_regs, SUB1CFG, 0x1520);
 
-ALWAYS_INLINE void hal_gpio_pin_set_low(const struct hal_gpio_pin *const pin)
+/**
+ * Sets a given bitmask of bits corresponding to GPIO pins low.
+ *
+ * @param pins The pins to set low.
+ */
+ALWAYS_INLINE void hal_gpio_pin_set_low(const enum hal_gpio_pin pins)
 {
-	HAL_GPIO0->DOUTCLR31_0 |= pin->pin_idx;
+	HAL_GPIO0->DOUTCLR31_0 |= pins;
 }
 
-ALWAYS_INLINE void hal_gpio_pin_set_high(const struct hal_gpio_pin *const pin)
+/**
+ * Sets a given bitmask of bits corresponding to GPIO pins high.
+ *
+ * @param pins The pins to set high.
+ */
+ALWAYS_INLINE void hal_gpio_pin_set_high(const enum hal_gpio_pin pins)
 {
-	HAL_GPIO0->DOUTSET31_0 |= pin->pin_idx;
+	HAL_GPIO0->DOUTSET31_0 |= pins;
 }
 
-ALWAYS_INLINE void hal_gpio_pin_toggle(const struct hal_gpio_pin *const pin)
+/**
+ * Toggles a given bitmask of bits corresponding to GPIO pins.
+ *
+ * @param pins The pins to toggle.
+ */
+ALWAYS_INLINE void hal_gpio_pin_toggle(const enum hal_gpio_pin pins)
 {
-	HAL_GPIO0->DOUTTGL31_0 |= pin->pin_idx;
+	HAL_GPIO0->DOUTTGL31_0 |= pins;
 }
-
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA0;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA1;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA2;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA4;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA6;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA11;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA16;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA17;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA18;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA19;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA20;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA22;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA23;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA24;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA25;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA26;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA27;
-extern const struct hal_gpio_pin HAL_GPIO_PIN_PA28;
-
-extern const struct hal_gpio_pin_cfg hal_gpio_cfg_initial[];
-extern const uint32_t hal_gpio_cfg_initial_num_entries;
 
 void hal_gpio_init(void);
 
+void hal_gpio_cfg_pin(const struct hal_gpio_pin_cfg *cfg);
+
 void hal_gpio_cfg_unused_pins(
-	enum hal_gpio_unused_pin_cfg_strategy unused_pin_cfg_strategy);
+	enum hal_gpio_unused_pin_cfg_strategy unused_pin_cfg_strategy,
+	enum hal_gpio_unused_pin_cfg_debug_pins debug_pins);
+
+/**
+ * Defines the GPIO pins that should be configured when the HAL is initialized.
+ */
+extern const struct hal_gpio_pin_cfg hal_gpio_cfg_initial[];
+
+/** Defines the number of HAL GPIO configuration entries. */
+extern const uint32_t hal_gpio_cfg_initial_num_entries;

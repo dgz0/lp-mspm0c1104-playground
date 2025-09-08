@@ -1,7 +1,10 @@
 <component name="ProjectDictionaryState">
   <dictionary name="project">
     <words>
+      <w>attribs</w>
       <w>blinky</w>
+      <w>clksource</w>
+      <w>cpuclk</w>
       <w>funcs</w>
       <w>gnuc</w>
       <w>hysten</w>
@@ -10,6 +13,7 @@
       <w>iomux</w>
       <w>memb</w>
       <w>nombat</w>
+      <w>odio</w>
       <w>picolibc</w>
       <w>pinc</w>
       <w>pincm</w>
@@ -19,7 +23,13 @@
       <w>pwren</w>
       <w>resetassert</w>
       <w>rstctl</w>
+      <w>sdio</w>
       <w>spdx</w>
+      <w>swclk</w>
+      <w>swdio</w>
+      <w>syst</w>
+      <w>systick</w>
+      <w>tickint</w>
       <w>wakestat</w>
       <w>wcomp</w>
       <w>wuen</w>

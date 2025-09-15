@@ -72,6 +72,13 @@ enum hal_gpio_pin {
 	// clang-format on
 };
 
+enum hal_gpio_pin_edge_detect_mode {
+	HAL_GPIO_EDGE_DETECT_NONE = 0,
+	HAL_GPIO_EDGE_DETECT_RISING = 1,
+	HAL_GPIO_EDGE_DETECT_FALLING = 2,
+	HAL_GPIO_EDGE_DETECT_RISING_FALLING = 3
+};
+
 enum hal_gpio_unused_pin_cfg_strategy {
 	/** All unused pins are configured to output low. */
 	HAL_GPIO_UNUSED_PIN_CFG_STRATEGY_OUTPUT_LOW = 0,
@@ -435,6 +442,10 @@ HAL_ALWAYS_INLINE void hal_gpio_pin_toggle(const enum hal_gpio_pin pins)
 void hal_gpio_init(void);
 
 void hal_gpio_cfg_pin(const struct hal_gpio_pin_cfg *cfg);
+
+void hal_gpio_pin_edge_detect_mode_set(
+	enum hal_gpio_pin pin,
+	enum hal_gpio_pin_edge_detect_mode edge_detect_mode, void (*cb)(void));
 
 void hal_gpio_cfg_unused_pins(
 	enum hal_gpio_unused_pin_cfg_strategy unused_pin_cfg_strategy,

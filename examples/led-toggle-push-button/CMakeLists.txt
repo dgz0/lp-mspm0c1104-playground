@@ -20,10 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-if (MSPM0C1104_BUILD_BLINKY_EXAMPLE)
-	add_subdirectory(blinky)
-endif()
+set(SRCS cfg.c main.c)
 
-if (MSPM0C1104_BUILD_LED_TOGGLE_PUSH_BUTTON_EXAMPLE)
-	add_subdirectory(led-toggle-push-button)
-endif()
+add_executable(lp-mspm0c1104-example-led-toggle-push-button ${SRCS})
+target_link_libraries(lp-mspm0c1104-example-led-toggle-push-button mspm0c1104)
+
+toolchain_set_linker_script(
+	lp-mspm0c1104-example-led-toggle-push-button
+	${CMAKE_SOURCE_DIR}/examples/assets/linker-script.ld
+)
+
+toolchain_print_target_size(lp-mspm0c1104-example-led-toggle-push-button)

@@ -22,49 +22,51 @@
 
 /** @file hal-startup.c Provides startup code for the TI MSPM0C1104. */
 
-#include <stdint.h>
-#include "mspm0c1104/compiler.h"
+#include "mspm0c1104/hal-compiler.h"
+#include "mspm0c1104/hal-util.h"
 
 /**
- * @defgroup mspm0c1104_vec_tbl_offsets TI MSPM0C1104 vector table offsets
- * @brief Defines the vector table offsets needed to call ISRs.
+ * @brief Defines the vector table offsets corresponding to exception vectors.
  *
- * @{
+ * @see ARMv6-M Architecture Reference Manual, page 192
  */
+enum vec_tbl_off {
+	// clang-format off
 
-#define VEC_SP_main	(0)
-#define VEC_Reset	(1)
-#define VEC_NMI		(2)
-#define VEC_HardFault	(3)
-#define VEC_SVCall	(11)
-#define VEC_PendSV	(14)
-#define VEC_SysTick	(15)
-#define VEC_INT_GROUP0	(16)
-#define VEC_GPIO0	(17)
-#define VEC_TIMG8	(18)
-#define VEC_ADC		(20)
-#define VEC_SPI0	(25)
-#define VEC_UART0	(31)
-#define VEC_TIMG14	(32)
-#define VEC_TIMA0	(34)
-#define VEC_I2C0	(40)
-#define VEC_DMA		(47)
+	VEC_TBL_OFF_SP_main	= 0,
+	VEC_TBL_OFF_Reset	= 1,
+	VEC_TBL_OFF_NMI		= 2,
+	VEC_TBL_OFF_HardFault	= 3,
+	VEC_TBL_OFF_SVCall	= 11,
+	VEC_TBL_OFF_PendSV	= 14,
 
-/** @} */
+	VEC_TBL_OFF_INT_GROUP0	= 16,
+	VEC_TBL_OFF_GPIO0	= 17,
+	VEC_TBL_OFF_TIMG8	= 18,
+	VEC_TBL_OFF_ADC		= 20,
+	VEC_TBL_OFF_SPI0	= 25,
+	VEC_TBL_OFF_UART0	= 31,
+	VEC_TBL_OFF_TIMG14	= 32,
+	VEC_TBL_OFF_TIMA0	= 34,
+	VEC_TBL_OFF_I2C0	= 40,
+	VEC_TBL_OFF_DMA		= 47
 
-#define ISR_FUNC WEAK_SYMBOL ALIAS("hal_isr_default")
+	// clang-format on
+};
 
 /** Stack pointer defined by the linker script. */
-extern uint32_t __stack;
+extern u32 __stack;
 
 /** picolibc entry point. */
-extern void _start(void) NORETURN;
+extern void _start(void) HAL_NORETURN;
+
+#define ISR_FUNC HAL_WEAK_SYMBOL HAL_ALIAS("hal_isr_default")
 
 ISR_FUNC void hal_isr_NMI(void);
 ISR_FUNC void hal_isr_HardFault(void);
 ISR_FUNC void hal_isr_SVCall(void);
 ISR_FUNC void hal_isr_PendSV(void);
-ISR_FUNC void hal_isr_SysTick(void);
+
 ISR_FUNC void hal_isr_INT_GROUPO(void);
 ISR_FUNC void hal_isr_GPIO0(void);
 ISR_FUNC void hal_isr_TIMG8(void);
@@ -76,28 +78,33 @@ ISR_FUNC void hal_isr_TIMA0(void);
 ISR_FUNC void hal_isr_I2C0(void);
 ISR_FUNC void hal_isr_DMA(void);
 
+#undef ISR_FUNC
+
 void hal_isr_default(void)
 {
-	asm("BKPT");
+	hal_halt_processor();
 }
 
-PLACE_IN_SECTION(".init")
+HAL_PLACE_IN_SECTION(".init")
 const void *const __interrupt_vector[64] = {
-	[VEC_SP_main]		= &__stack,
-	[VEC_Reset]		= _start,
-	[VEC_NMI]		= hal_isr_NMI,
-	[VEC_HardFault]		= hal_isr_HardFault,
-	[VEC_SVCall]		= hal_isr_SVCall,
-	[VEC_PendSV]		= hal_isr_PendSV,
-	[VEC_SysTick]		= hal_isr_SysTick,
-	[VEC_INT_GROUP0]	= hal_isr_INT_GROUPO,
-	[VEC_GPIO0]		= hal_isr_GPIO0,
-	[VEC_TIMG8]		= hal_isr_TIMG8,
-	[VEC_ADC]		= hal_isr_ADC,
-	[VEC_SPI0]		= hal_isr_SPI0,
-	[VEC_UART0]		= hal_isr_UART0,
-	[VEC_TIMG14]		= hal_isr_TIMG14,
-	[VEC_TIMA0]		= hal_isr_TIMA0,
-	[VEC_I2C0]		= hal_isr_I2C0,
-	[VEC_DMA]		= hal_isr_DMA
+	// clang-format off
+
+	[VEC_TBL_OFF_SP_main]		= &__stack,
+	[VEC_TBL_OFF_Reset]		= _start,
+	[VEC_TBL_OFF_NMI]		= hal_isr_NMI,
+	[VEC_TBL_OFF_HardFault]		= hal_isr_HardFault,
+	[VEC_TBL_OFF_SVCall]		= hal_isr_SVCall,
+	[VEC_TBL_OFF_PendSV]		= hal_isr_PendSV,
+	[VEC_TBL_OFF_INT_GROUP0]	= hal_isr_INT_GROUPO,
+	[VEC_TBL_OFF_GPIO0]		= hal_isr_GPIO0,
+	[VEC_TBL_OFF_TIMG8]		= hal_isr_TIMG8,
+	[VEC_TBL_OFF_ADC]		= hal_isr_ADC,
+	[VEC_TBL_OFF_SPI0]		= hal_isr_SPI0,
+	[VEC_TBL_OFF_UART0]		= hal_isr_UART0,
+	[VEC_TBL_OFF_TIMG14]		= hal_isr_TIMG14,
+	[VEC_TBL_OFF_TIMA0]		= hal_isr_TIMA0,
+	[VEC_TBL_OFF_I2C0]		= hal_isr_I2C0,
+	[VEC_TBL_OFF_DMA]		= hal_isr_DMA
+
+	// clang-format on
 };

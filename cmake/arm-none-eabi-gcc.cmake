@@ -42,9 +42,9 @@ get_filename_component(
 # Without this flag, CMake is not able to pass the test compilation.
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-set(CMAKE_C_COMPILER arm-none-eabi-gcc)
+set(CMAKE_C_COMPILER arm-none-eabi-gcc CACHE STRING "" FORCE)
 set(CMAKE_ASM_COMPILER arm-none-eabi-gcc)
-set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
+set(CMAKE_CXX_COMPILER arm-none-eabi-g++ CACHE STRING "" FORCE)
 set(CMAKE_AR arm-none-eabi-gcc-ar)
 set(CMAKE_RANLIB arm-none-eabi-gcc-ranlib)
 

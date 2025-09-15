@@ -20,15 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "mspm0c1104/hal.h"
-#include "mspm0c1104/hal-systick.h"
+#include <mspm0c1104/hal.h>
+#include <mspm0c1104/hal-systick.h>
 
 void hal_init(void)
 {
+	hal_tim_init();
+	hal_gpio_init();
+
 #if defined(HAL_SYSTICK_ENABLE) && defined(HAL_SYSTICK_INIT_ON_START) && \
 	defined(HAL_SYSTICK_TICK_RATE_MS)
 	hal_systick_init(HAL_SYSTICK_TICK_RATE_MS);
-#endif // defined(HAL_FEATURE_SYSTICK) && defined(HAL_CFG_SYSTICK_ON_START)
-
-	hal_gpio_init();
+#endif // defined(HAL_SYSTICK_ENABLE) && defined(HAL_CFG_SYSTICK_ON_START)
 }

@@ -23,6 +23,7 @@
 #pragma once
 
 #include <mspm0c1104/hal-gpio.h>
-#include <mspm0c1104/hal-soft-tmr.h>
+#include <mspm0c1104/hal-soft-tim.h>
+#include <mspm0c1104/hal-tim.h>
 
 void hal_init(void);

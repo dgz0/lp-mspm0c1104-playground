@@ -3,15 +3,19 @@
     <words>
       <w>attribs</w>
       <w>blinky</w>
+      <w>busclk</w>
       <w>clksource</w>
       <w>cpuclk</w>
       <w>funcs</w>
       <w>gnuc</w>
       <w>hysten</w>
       <w>iidx</w>
+      <w>imask</w>
       <w>inena</w>
       <w>iomux</w>
+      <w>lfclk</w>
       <w>memb</w>
+      <w>mfclk</w>
       <w>nombat</w>
       <w>odio</w>
       <w>picolibc</w>
@@ -30,6 +34,9 @@
       <w>syst</w>
       <w>systick</w>
       <w>tickint</w>
+      <w>tima</w>
+      <w>timg</w>
+      <w>ulpclk</w>
       <w>wakestat</w>
       <w>wcomp</w>
       <w>wuen</w>

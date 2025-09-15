@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/** @file main.c Defines a simple blinky. */
+
 #include <stdlib.h>
 #include "cfg.h"
 
@@ -27,13 +29,13 @@ int main(void)
 {
 	hal_init();
 
-	struct hal_soft_tmr tmr;
-	hal_soft_tmr_start(&tmr, SEC_TO_MS(1));
+	struct hal_soft_tim tmr;
+	hal_soft_tim_start(&tmr, 500);
 
 	for (;;) {
-		if (hal_soft_tmr_expired(&tmr)) {
+		if (hal_soft_tim_expired(&tmr)) {
 			hal_gpio_pin_toggle(APP_GPIO_PIN_RED_LED);
-			hal_soft_tmr_start(&tmr, SEC_TO_MS(1));
+			hal_soft_tim_start(&tmr, 500);
 		} else {
 			hal_no_op();
 		}

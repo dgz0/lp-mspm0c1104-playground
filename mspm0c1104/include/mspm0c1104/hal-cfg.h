@@ -30,7 +30,7 @@
  *
  * The default configuration if not overridden by an example is as follows:
  *
- * - SysTick support is enabled and initialized at HAL initialization time with
+ * - HAL tick support is enabled and initialized at HAL initialization time with
  *   a tick rate of 1ms. The underlying tick representation is an unsigned
  *   32-bit integer; it will overflow in 49.71 days. If you wish, you may change
  *   the underlying tick representation to an unsigned 64-bit integer, but this
@@ -49,12 +49,14 @@
 
 #pragma once
 
+#include "hal-types.h"
+
 #ifndef HAL_SYSTICK_ENABLE
 #define HAL_SYSTICK_ENABLE
 #endif // HAL_SYSTICK_ENABLE
 
 #if defined(HAL_SYSTICK_ENABLE) && !defined(HAL_SYSTICK_TICK_TYPE)
-#define HAL_SYSTICK_TICK_TYPE uint32_t
+#define HAL_SYSTICK_TICK_TYPE u32
 #endif // defined(HAL_SYSTICK_ENABLE) && !defined(HAL_SYSTICK_TICK_TYPE)
 
 #if defined(HAL_SYSTICK_ENABLE) && !defined(HAL_SYSTICK_INIT_ON_START)
@@ -65,6 +67,6 @@
 #define HAL_SYSTICK_TICK_RATE_MS (1)
 #endif // defined(HAL_SYSTICK_INIT_ON_START) && !defined(HAL_SYSTICK_TICK_RATE_MS)
 
-#if !defined(HAL_SOFT_TMR_ENABLE) && defined(HAL_SYSTICK_ENABLE)
-#define HAL_SOFT_TMR_ENABLE
-#endif // !defined(HAL_SOFT_TMR_ENABLE) && defined(HAL_SYSTICK_ENABLE)
+#if !defined(HAL_SOFT_TIM_ENABLE) && defined(HAL_SYSTICK_ENABLE)
+#define HAL_SOFT_TIM_ENABLE
+#endif // !defined(HAL_SOFT_TIM_ENABLE) && defined(HAL_SYSTICK_ENABLE)

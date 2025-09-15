@@ -24,20 +24,24 @@ set(SRCS
 	hal.c
 	hal-gpio.c
 	hal-iomux.c
-	hal-soft-tmr.c
+	hal-soft-tim.c
 	hal-startup.c
 	hal-systick.c
+	hal-tim.c
 )
 
 set(HDRS
-	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/compiler.h
-	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-cfg.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-clk.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-compiler.h
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-gpio.h
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-iomux.h
-	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-nvic.h
-	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-soft-tmr.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-irq.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-soft-tim.h
 	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-systick.h
-	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/util.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-tim.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal-types.h
+	${CMAKE_SOURCE_DIR}/mspm0c1104/include/mspm0c1104/hal.h
 )
 
 add_library(mspm0c1104 OBJECT ${SRCS} ${HDRS})

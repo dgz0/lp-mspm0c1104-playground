@@ -22,7 +22,7 @@
 
 #include "cfg.h"
 
-const struct hal_gpio_pin_cfg hal_gpio_cfg_initial[] = {
+const struct hal_gpio_pin_cfg hal_gpio_cfg_init[] = {
 	// clang-format off
 
 	[0] = {
@@ -41,5 +41,4 @@ const struct hal_gpio_pin_cfg hal_gpio_cfg_initial[] = {
 	// clang-format on
 };
 
-const uint32_t hal_gpio_cfg_initial_num_entries =
-	ARRAY_SIZE(hal_gpio_cfg_initial);
+const u32 hal_gpio_cfg_init_num_entries = hal_array_size(hal_gpio_cfg_init);

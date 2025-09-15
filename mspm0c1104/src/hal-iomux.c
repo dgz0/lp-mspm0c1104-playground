@@ -24,19 +24,10 @@
 
 // clang-format off
 
-#define PINCM_BIT_INV		(BIT_26)
-#define PINCM_BIT_HIZ1		(BIT_25)
-#define PINCM_BIT_HYSTEN	(BIT_19)
-#define PINCM_BIT_PIPU		(BIT_17)
-#define PINCM_BIT_PIPD		(BIT_16)
-#define PINCM_BIT_INENA		(BIT_18)
-#define PINCM_BIT_PC		(BIT_7)
-#define PINCM_MASK_PF		(BIT_5 | BIT_4 | BIT_3 | BIT_2 | BIT_1 | BIT_0)
-
-#define IO_FEAT_INV_CTRL		(BIT_0)
-#define IO_FEAT_HYSTERESIS_CTRL		(BIT_1)
-#define IO_FEAT_PULLUP_RESISTOR		(BIT_2)
-#define IO_FEAT_PULLDOWN_RESISTOR	(BIT_3)
+#define IO_FEAT_INV_CTRL		(HAL_BIT_0)
+#define IO_FEAT_HYSTERESIS_CTRL		(HAL_BIT_1)
+#define IO_FEAT_PULLUP_RESISTOR		(HAL_BIT_2)
+#define IO_FEAT_PULLDOWN_RESISTOR	(HAL_BIT_3)
 
 #define IO_STRUCT_SDIO \
 	(IO_FEAT_INV_CTRL | IO_FEAT_PULLUP_RESISTOR | IO_FEAT_PULLDOWN_RESISTOR)
@@ -47,10 +38,10 @@
 // clang-format on
 
 static const struct pin_attrib {
-	const uint8_t io_struct;
-	const uint8_t valid_digital_funcs;
+	const u8 io_struct;
+	const u8 valid_digital_funcs;
 	const bool supports_analog_funcs;
-} pin_attribs[] = {
+} pin_attribs[HAL_IOMUX_PINCM_NUM_MAX] = {
 	// clang-format off
 
 	[HAL_IOMUX_PINCM_PA0] = {
@@ -288,9 +279,9 @@ const uint32_t hal_iomux_valid_pincm_mask =
 void hal_iomux_set_pin_inv(const enum hal_iomux_pincm idx, const bool inv)
 {
 	if (inv) {
-		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_INV;
+		HAL_IOMUX->PINCM[idx] |= HAL_IOMUX_PINCM_BIT_INV;
 	} else {
-		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_INV;
+		HAL_IOMUX->PINCM[idx] &= ~HAL_IOMUX_PINCM_BIT_INV;
 	}
 }
 
@@ -301,9 +292,9 @@ void hal_iomux_set_pin_hysteresis(const enum hal_iomux_pincm idx,
 		if (!(pin_attribs[idx].io_struct & IO_FEAT_HYSTERESIS_CTRL)) {
 			return;
 		}
-		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_HYSTEN;
+		HAL_IOMUX->PINCM[idx] |= HAL_IOMUX_PINCM_BIT_HYSTEN;
 	} else {
-		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_HYSTEN;
+		HAL_IOMUX->PINCM[idx] &= ~HAL_IOMUX_PINCM_BIT_HYSTEN;
 	}
 }
 
@@ -312,22 +303,23 @@ void hal_iomux_set_pin_resistor(const enum hal_iomux_pincm idx,
 {
 	switch (resistor_type) {
 	case HAL_IOMUX_RESISTOR_TYPE_NONE:
-		HAL_IOMUX->PINCM[idx] &= ~(PINCM_BIT_PIPU | PINCM_BIT_PIPD);
+		HAL_IOMUX->PINCM[idx] &=
+			~(HAL_IOMUX_PINCM_BIT_PIPU | HAL_IOMUX_PINCM_BIT_PIPD);
 		return;
 
 	case HAL_IOMUX_RESISTOR_TYPE_PULL_UP:
 		// This pin does not support a programmable pull-up resistor.
-		HAL_ASSERT((pin_attribs[idx].io_struct &
+		hal_assert((pin_attribs[idx].io_struct &
 			    IO_FEAT_PULLUP_RESISTOR) != 0);
 
-		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_PIPD;
-		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_PIPU;
+		HAL_IOMUX->PINCM[idx] &= ~HAL_IOMUX_PINCM_BIT_PIPD;
+		HAL_IOMUX->PINCM[idx] |= HAL_IOMUX_PINCM_BIT_PIPU;
 
 		return;
 
 	case HAL_IOMUX_RESISTOR_TYPE_PULL_DOWN:
-		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_PIPD;
-		HAL_IOMUX->PINCM[idx] &= ~PINCM_BIT_PIPU;
+		HAL_IOMUX->PINCM[idx] |= HAL_IOMUX_PINCM_BIT_PIPD;
+		HAL_IOMUX->PINCM[idx] &= ~HAL_IOMUX_PINCM_BIT_PIPU;
 
 		return;
 
@@ -336,35 +328,39 @@ void hal_iomux_set_pin_resistor(const enum hal_iomux_pincm idx,
 	}
 }
 
-void hal_iomux_set_pin_func(const enum hal_iomux_pincm idx, uint8_t func,
+void hal_iomux_set_pin_func(const enum hal_iomux_pincm idx, u8 func,
 			    const bool input_enabled)
 {
 	// Clear the PC bit (input/output connect bit) and INENA (input connect
 	// bit) in the corresponding PINCMx register
-	HAL_IOMUX->PINCM[idx] &= ~(PINCM_BIT_PC | PINCM_BIT_INENA);
+	HAL_IOMUX->PINCM[idx] &=
+		~(HAL_IOMUX_PINCM_BIT_PC | HAL_IOMUX_PINCM_BIT_INENA);
 
 	// Write 0x0 to the PF field in the PINCMx to clear the logic in the
 	// data path
-	set_val_by_mask(HAL_IOMUX->PINCM[idx], PINCM_MASK_PF, 0x0);
+	hal_set_val_by_mask(HAL_IOMUX->PINCM[idx], HAL_IOMUX_PINCM_MASK_PF,
+			    0x0);
 
 	if (func == 0) {
 		return;
 	}
 
 	// This pin does not support the digital I/O function requested.
-	HAL_ASSERT((pin_attribs[idx].valid_digital_funcs & func) != 0);
+	hal_assert((pin_attribs[idx].valid_digital_funcs & func) != 0);
 
-	func = clz_u32(func);
+	func = hal_clz_u32(func);
 
 	// Select the new peripheral function by writing the peripheral function
 	// ID to the PF register
-	set_val_by_mask(HAL_IOMUX->PINCM[idx], PINCM_MASK_PF, func);
+	hal_set_val_by_mask(HAL_IOMUX->PINCM[idx], HAL_IOMUX_PINCM_MASK_PF,
+			    func);
 
 	// Set the PC and INENA bits in the PINCMx register to connect the newly
 	// selected peripheral
 	if (input_enabled) {
-		HAL_IOMUX->PINCM[idx] |= (PINCM_BIT_PC | PINCM_BIT_INENA);
+		HAL_IOMUX->PINCM[idx] |=
+			(HAL_IOMUX_PINCM_BIT_PC | HAL_IOMUX_PINCM_BIT_INENA);
 	} else {
-		HAL_IOMUX->PINCM[idx] |= PINCM_BIT_PC;
+		HAL_IOMUX->PINCM[idx] |= HAL_IOMUX_PINCM_BIT_PC;
 	}
 }

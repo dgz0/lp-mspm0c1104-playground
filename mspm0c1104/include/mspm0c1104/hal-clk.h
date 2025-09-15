@@ -42,8 +42,10 @@
 
 #pragma once
 
-#include "util.h"
+#include "hal-util.h"
 
-#define HAL_FREQ_CPUCLK_HZ (MHZ_TO_HZ(24))
-#define HAL_FREQ_ULPCLK_HZ (HAL_FREQ_CPUCLK_HZ)
-#define HAL_FREQ_LFCLK_HZ (32770)
+enum hal_clk_freq {
+	HAL_CLK_FREQ_CPUCLK_HZ = hal_mhz_to_hz(24),
+	HAL_CLK_FREQ_ULPCLK_HZ = HAL_CLK_FREQ_CPUCLK_HZ,
+	HAL_CLK_FREQ_LFCLK_HZ = 32768
+};

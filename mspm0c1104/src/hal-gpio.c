@@ -22,16 +22,6 @@
 
 #include <mspm0c1104/hal-gpio.h>
 
-// clang-format off
-
-#define PWREN_MASK_KEY		(0x26 << 24)
-#define PWREN_BIT_ENABLE	(BIT_0)
-
-#define RSTCTL_MASK_KEY		(0xB1 << 24)
-#define RSTCTL_BIT_RESETASSERT	(BIT_0)
-
-// clang-format on
-
 static uint32_t configured_pins;
 
 static void enable_pin_output(const enum hal_gpio_pin pins)
@@ -39,20 +29,21 @@ static void enable_pin_output(const enum hal_gpio_pin pins)
 	HAL_GPIO0->DOESET31_0 |= pins;
 }
 
-NODISCARD static enum hal_iomux_pincm
+HAL_NODISCARD static enum hal_iomux_pincm
 gpio_pin_to_iomux_pincm(const enum hal_gpio_pin pin)
 {
-	return clz_u32(pin);
+	return hal_clz_u32(pin);
 }
 
 void hal_gpio_pwr_enable(void)
 {
-	HAL_GPIO0->PWREN = PWREN_MASK_KEY | PWREN_BIT_ENABLE;
+	HAL_GPIO0->PWREN = HAL_GPIO_PWREN_KEY_VAL | HAL_GPIO_PWREN_BIT_ENABLE;
 }
 
 void hal_gpio_rst(void)
 {
-	HAL_GPIO0->RSTCTL = RSTCTL_MASK_KEY | RSTCTL_BIT_RESETASSERT;
+	HAL_GPIO0->RSTCTL = HAL_GPIO_RSTCTL_KEY_VAL |
+			    HAL_GPIO_RSTCTL_BIT_RESETASSERT;
 }
 
 void hal_gpio_init(void)
@@ -60,8 +51,8 @@ void hal_gpio_init(void)
 	hal_gpio_rst();
 	hal_gpio_pwr_enable();
 
-	for (uint32_t i = 0; i < hal_gpio_cfg_initial_num_entries; ++i)
-		hal_gpio_cfg_pin(&hal_gpio_cfg_initial[i]);
+	for (uint32_t i = 0; i < hal_gpio_cfg_init_num_entries; ++i)
+		hal_gpio_cfg_pin(&hal_gpio_cfg_init[i]);
 }
 
 void hal_gpio_cfg_pin(const struct hal_gpio_pin_cfg *const cfg)
